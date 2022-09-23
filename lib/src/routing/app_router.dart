@@ -1,5 +1,6 @@
 import 'package:ecommerce_app/src/features/account/account_screen.dart';
 import 'package:ecommerce_app/src/features/orders_list/orders_list_screen.dart';
+import 'package:ecommerce_app/src/features/product_page/product_screen.dart';
 import 'package:ecommerce_app/src/features/sign_in/email_password_sign_in_screen.dart';
 import 'package:ecommerce_app/src/features/sign_in/email_password_sign_in_state.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,7 @@ import 'package:go_router/go_router.dart';
 import '../features/products_list/products_list_screen.dart';
 import '../features/shopping_cart/shopping_cart_screen.dart';
 
-enum AppRoute { home, cart, orders, account, signIn }
+enum AppRoute { home, cart, orders, account, signIn, product }
 
 final goRouter = GoRouter(
   initialLocation: '/',
@@ -56,6 +57,14 @@ final goRouter = GoRouter(
               ),
               fullscreenDialog: true,
             ),
+          ),
+          GoRoute(
+            path: 'product/:id',
+            name: AppRoute.product.name,
+            builder: (context, state) {
+              final productId = state.params['id']!;
+              return ProductScreen(productId: productId);
+            },
           ),
         ]),
   ],
