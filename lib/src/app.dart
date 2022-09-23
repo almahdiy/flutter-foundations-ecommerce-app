@@ -2,22 +2,13 @@ import 'package:ecommerce_app/src/features/products_list/products_list_screen.da
 import 'package:ecommerce_app/src/localization/string_hardcoded.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ecommerce_app/src/routing/app_router.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final goRouter = GoRouter(
-      initialLocation: '/',
-      debugLogDiagnostics: true,
-      routes: [
-        GoRoute(
-          path: '/',
-          builder: (context, state) => const ProductsListScreen(),
-        ),
-      ],
-    );
     return MaterialApp.router(
       // .router is added to opt-in to use Navigator 2.0, as GoRouter is built on top of it and needs this.
       routeInformationProvider: goRouter.routeInformationProvider,
