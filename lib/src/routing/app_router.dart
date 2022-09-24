@@ -16,7 +16,7 @@ enum AppRoute { home, cart, orders, account, signIn, product, leaveReview, check
 
 final goRouter = GoRouter(
     initialLocation: '/',
-    debugLogDiagnostics: true,
+    debugLogDiagnostics: false,
     routes: [
       GoRoute(
           path: '/',
