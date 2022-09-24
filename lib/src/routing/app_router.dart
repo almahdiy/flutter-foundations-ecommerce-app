@@ -1,97 +1,109 @@
-import 'package:ecommerce_app/src/features/account/account_screen.dart';
-import 'package:ecommerce_app/src/features/checkout/checkout_screen.dart';
-import 'package:ecommerce_app/src/features/leave_review_page/leave_review_screen.dart';
-import 'package:ecommerce_app/src/features/not_found/not_found_screen.dart';
-import 'package:ecommerce_app/src/features/orders_list/orders_list_screen.dart';
-import 'package:ecommerce_app/src/features/product_page/product_screen.dart';
-import 'package:ecommerce_app/src/features/sign_in/email_password_sign_in_screen.dart';
-import 'package:ecommerce_app/src/features/sign_in/email_password_sign_in_state.dart';
+import 'package:ecommerce_app/src/features/authentication/presentation/account/account_screen.dart';
+import 'package:ecommerce_app/src/features/authentication/presentation/sign_in/email_password_sign_in_screen.dart';
+import 'package:ecommerce_app/src/features/authentication/presentation/sign_in/email_password_sign_in_state.dart';
+import 'package:ecommerce_app/src/features/cart/presentation/shopping_cart/shopping_cart_screen.dart';
+import 'package:ecommerce_app/src/features/checkout/presentation/checkout_screen/checkout_screen.dart';
+import 'package:ecommerce_app/src/features/orders/presentation/orders_list/orders_list_screen.dart';
+import 'package:ecommerce_app/src/features/products/presentation/product_screen/product_screen.dart';
+import 'package:ecommerce_app/src/features/products/presentation/products_list/products_list_screen.dart';
+import 'package:ecommerce_app/src/features/reviews/presentation/leave_review_screen/leave_review_screen.dart';
+import 'package:ecommerce_app/src/routing/not_found_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../features/products_list/products_list_screen.dart';
-import '../features/shopping_cart/shopping_cart_screen.dart';
-
-enum AppRoute { home, cart, orders, account, signIn, product, leaveReview, checkout }
+enum AppRoute {
+  home,
+  product,
+  leaveReview,
+  cart,
+  checkout,
+  orders,
+  account,
+  signIn,
+}
 
 final goRouter = GoRouter(
-    initialLocation: '/',
-    debugLogDiagnostics: false,
-    routes: [
-      GoRoute(
-          path: '/',
-          builder: (context, state) => const ProductsListScreen(),
-          name: AppRoute.home.name,
+  initialLocation: '/',
+  debugLogDiagnostics: false,
+  routes: [
+    GoRoute(
+      path: '/',
+      name: AppRoute.home.name,
+      builder: (context, state) => const ProductsListScreen(),
+      routes: [
+        GoRoute(
+          path: 'product/:id',
+          name: AppRoute.product.name,
+          builder: (context, state) {
+            final productId = state.params['id']!;
+            return ProductScreen(productId: productId);
+          },
           routes: [
             GoRoute(
-              path: 'cart',
-              name: AppRoute.cart.name,
-              routes: [
-                GoRoute(
-                  path: 'checkout',
-                  name: AppRoute.checkout.name,
-                  pageBuilder: (context, state) => const MaterialPage(
-                    child: CheckoutScreen(),
-                    fullscreenDialog: true,
-                  ),
-                ),
-              ],
-              // builder: (context, state) => const ShoppingCartScreen(),
-              // We replaced the builder argument with pageBuilder so we can use fullscreenDialog. This control the transition into the new route.
-              // with builder, the transition was right to left. With pageBuilder + fullscreenDialog, the transition is bottom-up.
-              // This also turns the back button into a close button (<- to X).
-              pageBuilder: (context, state) => const MaterialPage(
-                child: const ShoppingCartScreen(),
-                fullscreenDialog: true,
-              ),
-            ),
-            GoRoute(
-              path: 'orders',
-              name: AppRoute.orders.name,
-              pageBuilder: (context, state) => const MaterialPage(
-                child: const OrdersListScreen(),
-                fullscreenDialog: true,
-              ),
-            ),
-            GoRoute(
-              path: 'account',
-              name: AppRoute.account.name,
-              pageBuilder: (context, state) => const MaterialPage(
-                child: const AccountScreen(),
-                fullscreenDialog: true,
-              ),
-            ),
-            GoRoute(
-              path: 'signIn',
-              name: AppRoute.signIn.name,
-              pageBuilder: (context, state) => const MaterialPage(
-                child: EmailPasswordSignInScreen(
-                  formType: EmailPasswordSignInFormType.signIn,
-                ),
-                fullscreenDialog: true,
-              ),
-            ),
-            GoRoute(
-              path: 'product/:id',
-              name: AppRoute.product.name,
-              routes: [
-                GoRoute(
-                    path: 'review',
-                    name: AppRoute.leaveReview.name,
-                    pageBuilder: (context, state) {
-                      final productId = state.params['id']!;
-                      return MaterialPage(
-                        key: state.pageKey,
-                        fullscreenDialog: true,
-                        child: LeaveReviewScreen(productId: productId),
-                      );
-                    })
-              ],
-              builder: (context, state) {
+              path: 'review',
+              name: AppRoute.leaveReview.name,
+              pageBuilder: (context, state) {
                 final productId = state.params['id']!;
-                return ProductScreen(productId: productId);
+                return MaterialPage(
+                  key: state.pageKey,
+                  fullscreenDialog: true,
+                  child: LeaveReviewScreen(productId: productId),
+                );
               },
             ),
-          ]),
-    ],
-    errorBuilder: (context, state) => const NotFoundScreen());
+          ],
+        ),
+        GoRoute(
+          path: 'cart',
+          name: AppRoute.cart.name,
+          pageBuilder: (context, state) => MaterialPage(
+            key: state.pageKey,
+            fullscreenDialog: true,
+            child: const ShoppingCartScreen(),
+          ),
+          routes: [
+            GoRoute(
+              path: 'checkout',
+              name: AppRoute.checkout.name,
+              pageBuilder: (context, state) => MaterialPage(
+                key: state.pageKey,
+                fullscreenDialog: true,
+                child: const CheckoutScreen(),
+              ),
+            ),
+          ],
+        ),
+        GoRoute(
+          path: 'orders',
+          name: AppRoute.orders.name,
+          pageBuilder: (context, state) => MaterialPage(
+            key: state.pageKey,
+            fullscreenDialog: true,
+            child: const OrdersListScreen(),
+          ),
+        ),
+        GoRoute(
+          path: 'account',
+          name: AppRoute.account.name,
+          pageBuilder: (context, state) => MaterialPage(
+            key: state.pageKey,
+            fullscreenDialog: true,
+            child: const AccountScreen(),
+          ),
+        ),
+        GoRoute(
+          path: 'signIn',
+          name: AppRoute.signIn.name,
+          pageBuilder: (context, state) => MaterialPage(
+            key: state.pageKey,
+            fullscreenDialog: true,
+            child: const EmailPasswordSignInScreen(
+              formType: EmailPasswordSignInFormType.signIn,
+            ),
+          ),
+        ),
+      ],
+    ),
+  ],
+  errorBuilder: (context, state) => const NotFoundScreen(),
+);

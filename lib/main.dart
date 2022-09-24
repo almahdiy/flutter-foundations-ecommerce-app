@@ -10,8 +10,7 @@ void main() async {
   // * https://docs.flutter.dev/testing/errors
   await runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
-
-    // Gets rid of the detault # symbol that's added by default to the URL
+    // turn off the # in the URLs on the web
     GoRouter.setUrlPathStrategy(UrlPathStrategy.path);
     // * Entry point of the app
     runApp(const MyApp());
